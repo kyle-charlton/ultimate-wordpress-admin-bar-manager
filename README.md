@@ -1,29 +1,16 @@
-# README #
+# Ultimate WordPress Admin Bar Manager #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Chrome extension hides the WordPress admin bar and moves its contents into the extension context menu, it also adds an 'Edit Page' link to the right click context menu.
 
-### What is this repository for? ###
+### Future Updates ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* Option to automatically populate quick link section with links found in site's WP Admin bar
+* Option to show or hide WP admin bar (hide is currently defaulted)
+* Better styling
 
-### How do I get set up? ###
+# Changelog
+= 1.0.1 (03/20/2020) =
+* Bug: Fixed array error which prevented buttons from being saved
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+= 1.0 (03/18/2020) =
+* Initial Release
