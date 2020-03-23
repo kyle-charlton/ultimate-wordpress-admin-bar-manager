@@ -1,0 +1,7 @@
+html:lang(en-US):not(.wp-toolbar) {
+	margin-top: 0px !important;
+}
+
+html:not(.wp-toolbar) #wpadminbar {
+	display: none;
+}
