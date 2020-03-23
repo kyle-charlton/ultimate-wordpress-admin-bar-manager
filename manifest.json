@@ -1,0 +1,27 @@
+{
+	"manifest_version": 2,
+	"name":"Ultimate WordPress Admin Bar Manager",
+	"description":"This Chrome extension hides the WordPress admin bar and adds an 'Edit Page' link to the right click context menu.",
+	"version":"1.0.1",
+	"author": "Kyle Charlton",
+	"permissions": [
+	    "contextMenus",
+	    "tabs",
+	    "storage"
+	],
+	"content_scripts": [{
+		"matches": ["<all_urls>"],
+		"css": ["style.css"],
+		"js": ["content.js"]
+	}],
+	"icons": { "16": "icon16.png",
+	           "48": "icon48.png",
+	          "128": "icon128.png" 
+	},
+	"background": {
+		"scripts": ["background.js"]
+	},
+    "browser_action": {
+      "default_popup": "popup.html"
+  	}
+}
