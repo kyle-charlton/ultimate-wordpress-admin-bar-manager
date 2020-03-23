@@ -9,8 +9,8 @@ Chrome extension hides the WordPress admin bar and moves its contents into the e
 * Better styling
 
 # Changelog
-= 1.0.1 (03/20/2020) =
+## 1.0.1 (03/20/2020) ##
 * Bug: Fixed array error which prevented buttons from being saved
 
-= 1.0 (03/18/2020) =
+## 1.0 (03/18/2020) ##
 * Initial Release
