@@ -1,0 +1,80 @@
+#wrapper {
+    min-width: 20em;
+	padding: 0.2em 1em;
+}
+
+button {
+	width: 14em; 
+    padding: 0.4em;
+	cursor: pointer;
+}
+
+.remove-link, .remove-cpt {
+    width: 2em;
+    transition: all 300ms ease;
+}
+
+.remove-link:hover, .remove-cpt:hover {
+    background: #fa3a3a;
+}
+
+hr {
+    margin: 3em 0 0;
+}
+
+small, label, input {
+    display: block;
+}
+
+.add-btn, .cancel-btn {
+    text-align: left;
+    position: relative;
+    padding-left: 1em !important;
+}
+
+.add-btn span, .cancel-btn span {
+    background: green;
+    color: #fff;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 2em;
+    text-align: center;
+    padding: 0.4em 0;
+    transition: all 300ms ease;
+}
+
+.add-btn:hover span {
+    background: #d96804;
+}
+
+.cancel-btn {
+    display: none;
+}
+
+.cancel-btn span {
+    background: #d96804;
+}
+
+.cancel-btn:hover span {
+    background: red;
+}
+
+.hidden-group {
+    overflow: hidden;
+    max-height: 0;
+    transition: all 300ms ease;
+    background: lightblue;
+    padding: 0 1em;
+}
+
+.hidden-group.js-active {
+    max-height: 20em;
+    padding: 1em;
+}
+
+.hidden-group code {
+	display: block;
+}
