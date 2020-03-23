@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="popup.js"></script>
+	<link rel="stylesheet" type="text/css" href="popup.css">
+	<title></title>
+</head>
+<body>
+
+	<div id="wrapper">
+		
+		<div id="load_btns"></div>
+
+		<hr>
+		<br>
+
+		<button id="addButton" class="add-btn">Add Button <span>+</span></button>
+		<button id="cancelAddButton" class="cancel-btn">Cancel <span>X</span></button>
+		<div id="new_button_fields" class="hidden-group">
+			<label>Button Title: <input type="text" name="title" id="new_button_title"></label>
+			<label>Button URL: <input type="text" name="url" id="new_button_url"></label><br>
+			<small>Note: Button URL should not include the domain, for example, a link to the Menu page would be: <code>/wp-admin/nav-menus.php</code></small>
+			<p><button id="saveButton">Save Button</button></p>
+		</div>
+
+		<button id="addCPT" class="add-btn">Add Custom Post Type<span>+</span></button>
+		<button id="cancelAddCPT" class="cancel-btn">Cancel <span>X</span></button>
+		<div id="new_cpt_fields" class="hidden-group">
+			<label>Custom Post Type: <input type="text" name="url" id="new_cpt"></label><br>
+			<small>Note: Custom post types are used if you have CPT's in your menu and would like to right click on the link to edit that page. They should be entered as: <code>/bio/</code></small>
+			<p><button id="saveCPT">Save CPT</button></p>
+		</div>
+
+
+		<button id="showCPT" class="add-btn">Show CPT List<span>+</span></button>
+		<button id="hideCPT" class="cancel-btn">Hide CPT List <span>X</span></button>
+		<div id="load_cpts" class="hidden-group"></div>
+
+	</div>	
+
+</body>
+</html>
