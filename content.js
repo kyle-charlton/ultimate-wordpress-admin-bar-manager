@@ -32,6 +32,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	    } else {
 	    	cpt = [];
 	    }
+
+	    if(request == "getClickedEl0") { // Go to current page edit screen if body right clicked
+	    	var domain = window.location.protocol + "//" + window.location.host + "/";
+	        var go_to_url = domain+'wp-admin';
+	        window.open(go_to_url, '_blank');
+	    }
+
 	    if(request == "getClickedEl1") { // Go to menu page's edit screen if link in menu right clicked
 			var domain = window.location.protocol + "//" + window.location.host; // get domain
 			var link = document.activeElement.href; // get link href
@@ -54,18 +61,59 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			    window.open(go_to_url, '_blank');
 			});			
 	    }
-	});
 
-    if(request == "getClickedEl2") { // Go to current page edit screen if body right clicked
-		var classList = document.getElementsByTagName('body')[0].classList;
-		for (var i = 0; i < classList.length; i++) {
-		    if (classList[i].includes("page-id") || classList[i].includes("postid")) {
-		    	var domain = window.location.protocol + "//" + window.location.host + "/";
-		        var pageId = classList[i].split("-").pop(); 
-		        var go_to_url = domain+'wp-admin/post.php?post='+pageId+'&action=edit';
-		        window.open(go_to_url, '_blank');
-		    }
-		}
-    }
-    
+
+	    if(request == "getClickedEl2") { // Go to current page edit screen if body right clicked
+			var classList = document.getElementsByTagName('body')[0].classList;
+			for (var i = 0; i < classList.length; i++) {
+			    if (classList[i].includes("page-id") || classList[i].includes("postid")) {
+			    	var domain = window.location.protocol + "//" + window.location.host + "/";
+			        var pageId = classList[i].split("-").pop(); 
+			        var go_to_url = domain+'wp-admin/post.php?post='+pageId+'&action=edit';
+			        window.open(go_to_url, '_blank');
+			    }
+			}
+	    }
+
+
+	    if(request == "getClickedEl3") { // GET PAGE ID
+	    	var domain = window.location.protocol + "//" + window.location.host; // get domain
+			var link = document.activeElement.href; // get link href
+			var full_slug = link.replace(domain, ""); // remove domain
+			var full_slug_parse = full_slug.substring(0, full_slug.length-1); // remove back slash from end of url
+			var slug = full_slug_parse.split("/").pop(); // get the slug
+			var i;
+			for (i = 0; i < cpt.length; i++) {
+				if(link.includes(cpt[i]) ) {
+					console.log(cpt[i]);
+					pt = cpt[i];
+				} else {
+					pt = 'pages';
+				}
+			}
+			jQuery.get(domain+'/wp-json/wp/v2/'+pt+'?slug='+slug, function(data) {
+				console.log(data[0]['id']);
+				var pageID = data[0]['id'];
+ 				var dummy = $('<input class="kc-getID">').val(pageID).appendTo('body').select()
+ 				document.execCommand('copy')
+ 				$('.kc-getID').remove();
+			});			
+	    }
+
+
+	    if(request == "getClickedEl4") { // Go to current page edit screen if body right clicked
+			var classList = document.getElementsByTagName('body')[0].classList;
+			for (var i = 0; i < classList.length; i++) {
+			    if (classList[i].includes("page-id") || classList[i].includes("postid")) {
+			    	var domain = window.location.protocol + "//" + window.location.host + "/";
+			        var pageId = classList[i].split("-").pop(); 
+			        var dummy = $('<input class="kc-getID">').val(pageId).appendTo('body').select()
+ 					document.execCommand('copy')
+ 					$('.kc-getID').remove();
+			    }
+			}
+	    }
+
+
+	});
 });
