@@ -1,3 +1,5 @@
+// https://chrome-apps-doc2.appspot.com/extensions/contextMenus.html#method-create
+
 chrome.runtime.onMessage.addListener(function(request) {
 
 	if(request.cmd == 'addContextMenu') {
@@ -6,6 +8,10 @@ chrome.runtime.onMessage.addListener(function(request) {
 				title: '🛠 WordPress Dashboard',
 				contexts: ['all'],
 				onclick: kc_dashboard_trigger,
+			});
+			chrome.contextMenus.create({
+				type: 'separator',
+			    contexts: ['all']
 			});
 			chrome.contextMenus.create({
 				title: '✏ Edit WordPress Page',
@@ -25,6 +31,10 @@ chrome.runtime.onMessage.addListener(function(request) {
 				title: '🛠 WordPress Dashboard',
 				contexts: ['all'],
 				onclick: kc_dashboard_trigger,
+			});
+			chrome.contextMenus.create({
+				type: 'separator',
+			    contexts: ['all']
 			});
 			chrome.contextMenus.create({
 				title: '✏ Edit Linked WordPress Page',
