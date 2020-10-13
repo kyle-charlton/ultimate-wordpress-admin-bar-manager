@@ -70,13 +70,21 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			    	var domain = window.location.protocol + "//" + window.location.host + "/";
 			        var pageId = classList[i].split("-").pop(); 
 			        var go_to_url = domain+'wp-admin/post.php?post='+pageId+'&action=edit';
+			        //console.log(sender);
 			        window.open(go_to_url, '_blank');
+			        /*jQuery("body").keypress(function (e) {
+				        if (e.keyCode == 17) { // Ctrl
+				        	window.open(go_to_url, '_blank');
+				        } else {
+				        	window.open(go_to_url, '_self'); // _blank
+				        }
+				    });*/
 			    }
 			}
 	    }
 
 
-	    if(request == "getClickedEl3") { // GET PAGE ID
+	    if(request == "getClickedEl3") { // GET PAGE ID FROM MENU LINK
 	    	var domain = window.location.protocol + "//" + window.location.host; // get domain
 			var link = document.activeElement.href; // get link href
 			var full_slug = link.replace(domain, ""); // remove domain
@@ -101,7 +109,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	    }
 
 
-	    if(request == "getClickedEl4") { // Go to current page edit screen if body right clicked
+	    if(request == "getClickedEl4") { // Get current page ID if right click menu option selected
 			var classList = document.getElementsByTagName('body')[0].classList;
 			for (var i = 0; i < classList.length; i++) {
 			    if (classList[i].includes("page-id") || classList[i].includes("postid")) {
@@ -112,6 +120,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
  					$('.kc-getID').remove();
 			    }
 			}
+	    }
+
+
+	    if(request == "getClickedEl5") { // GET PAGE ID FROM MENU LINK
+	    	var domain = window.location.protocol + "//" + window.location.host; // get domain
+	    	var link = (document.activeElement.href) ? document.activeElement.href : window.location.href; // if menu link right clicked get link href else get page href
+			var full_slug = link.replace(domain, ""); // remove domain
+			console.log(full_slug);
+			var dummy = $('<input class="kc-getID">').val(full_slug).appendTo('body').select() // add permalink to input and select
+			document.execCommand('copy') // copy permalink
+			$('.kc-getID').remove(); // remove input
 	    }
 
 

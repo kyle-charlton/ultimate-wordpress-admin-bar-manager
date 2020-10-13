@@ -23,6 +23,11 @@ chrome.runtime.onMessage.addListener(function(request) {
 				contexts: ['all'],
 				onclick: kc_get_page_ID_trigger,
 			});
+			chrome.contextMenus.create({
+				title: '✄ Copy Permalink',
+				contexts: ['all'],
+				onclick: kc_copy_permalink,
+			});
 		});
 
 	} else if(request.cmd == 'addLinkContextMenu') {
@@ -45,6 +50,11 @@ chrome.runtime.onMessage.addListener(function(request) {
 				title: '🆔 Copy Linked Page/Post ID',
 				contexts: ['all'],
 				onclick: kc_get_linked_page_ID_trigger,
+			});
+			chrome.contextMenus.create({
+				title: '✄ Copy Permalink',
+				contexts: ['all'],
+				onclick: kc_copy_permalink,
 			});
 		});
 
@@ -72,4 +82,8 @@ function kc_get_linked_page_ID_trigger(info, tab) {
 
 function kc_get_page_ID_trigger(info, tab) {
     chrome.tabs.sendMessage(tab.id, "getClickedEl4");
+}
+
+function kc_copy_permalink(info, tab) {
+    chrome.tabs.sendMessage(tab.id, "getClickedEl5");
 }
