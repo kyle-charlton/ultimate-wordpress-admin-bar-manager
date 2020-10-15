@@ -3,40 +3,58 @@
 <head>
 	<script src="popup.js"></script>
 	<link rel="stylesheet" type="text/css" href="popup.css">
-	<title></title>
+	<title>Ultimate WordPress Admin Bar Manager</title>
 </head>
 <body>
-
-	<div id="wrapper">
-		
+	<div id="wrapper" class="kc-wp-admin-bar-mgr">
 		<div id="load_btns"></div>
-
 		<hr>
-		<br>
 
-		<button id="addButton" class="add-btn">Add Button <span>+</span></button>
-		<button id="cancelAddButton" class="cancel-btn">Cancel <span>X</span></button>
-		<div id="new_button_fields" class="hidden-group">
-			<label>Button Title: <input type="text" name="title" id="new_button_title"></label>
-			<label>Button URL: <input type="text" name="url" id="new_button_url"></label><br>
-			<small>Note: Button URL should not include the domain, for example, a link to the Menu page would be: <code>/wp-admin/nav-menus.php</code></small>
-			<p><button id="saveButton">Save Button</button></p>
-		</div>
+		<details>
+			<summary>Add Quick Link Button</summary>
+			<div class="kc-wp-admin-bar-mgr_options">
+				<label>Button Title: <input type="text" name="title" id="new_button_title"></label><br>
+				<label>Button URL: <input type="text" name="url" id="new_button_url"></label><br>
+				<p><button id="saveButton">Save Button</button></p>
+				<small><b>Note:</b> Button URL should not include the domain, for example, a link to the Menu page would be: <code>/wp-admin/nav-menus.php</code></small>
+			</div>
+		</details>
 
-		<button id="addCPT" class="add-btn">Add Custom Post Type<span>+</span></button>
-		<button id="cancelAddCPT" class="cancel-btn">Cancel <span>X</span></button>
-		<div id="new_cpt_fields" class="hidden-group">
-			<label>Custom Post Type: <input type="text" name="url" id="new_cpt"></label><br>
-			<small>Note: Custom post types are used if you have CPT's in your menu and would like to right click on the link to edit that page. They should be entered as: <code>/bio/</code></small>
-			<p><button id="saveCPT">Save CPT</button></p>
-		</div>
+		
+
+		<details>
+			<summary>Register Custom Post Types</summary>
+			<div id="new_cpt_fields" class="kc-wp-admin-bar-mgr_options">
+				<label>Custom Post Type: <input type="text" name="url" id="new_cpt"></label><br>
+				<p><button id="saveCPT">Save CPT</button></p>
+				<small><b>Note:</b> Custom post types are used if you have CPT's in your menu and would like to right click on the link to edit that page. They should be entered as: <code>/bio/</code></small>
+				<div id="load_cpts"></div>
+			</div>
+		</details>
 
 
-		<button id="showCPT" class="add-btn">Show CPT List<span>+</span></button>
-		<button id="hideCPT" class="cancel-btn">Hide CPT List <span>X</span></button>
-		<div id="load_cpts" class="hidden-group"></div>
+
+		<details style="display: none;">
+			<summary>General Options</summary>
+			<div class="kc-wp-admin-bar-mgr_options">
+				<label><input type="checkbox" id="hide_front_bar" class="general-checkboxes" value="hide_front_bar"> Hide Frontend Admin Bar</label><br>
+				<label><input type="checkbox" id="hide_admin_bar" value="hide_admin_bar"> Hide Dashboard WP Admin Bar</label><br>
+			</div>
+		</details>
+
+		
+
+		<details>
+			<summary>Context Menu Options</summary>
+			<div class="kc-wp-admin-bar-mgr_options">
+				<label><input type="checkbox" id="dashboard_link" class="context-checkboxes" value="dashboard_link"> Hide Dashboard Link</label><br>
+				<label><input type="checkbox" id="get_id" class="context-checkboxes" value="get_id"> Hide Copy Page ID</label><br>
+				<label><input type="checkbox" id="get_permalink" class="context-checkboxes" value="get_permalink"> Hide Copy Permalink</label><br>
+				
+			</div>
+		</details>
+
 
 	</div>	
-
 </body>
 </html>
