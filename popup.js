@@ -60,18 +60,78 @@ chrome.storage.sync.get('wp_cpts', function(data) {
 
 
 // Set general options checkbox list
-chrome.storage.sync.get('wp_gen_opts', function(data) {
-    if(data.wp_gen_opts) {
-    	general_opt = data.wp_gen_opts;
-    } else {
-    	general_opt = [];
-    }
+// chrome.storage.sync.get('wp_gen_opts', function(data) {
+//     if(data.wp_gen_opts) {
+//     	general_opt = data.wp_gen_opts;
+//     } else {
+//     	general_opt = [];
+//     }
 
-	var i;
-	for (i = 0; i < general_opt.length; i++) {
-		document.getElementById(general_opt[i]).checked = true;
+// 	var i;
+// 	for (i = 0; i < general_opt.length; i++) {
+// 		document.getElementById(general_opt[i]).checked = true;
+// 	}
+// });
+
+
+
+
+	// Get the checkbox element
+	const enableStylesheetCheckbox = document.getElementById('hide_front_bar');
+  
+	// Load the saved state (if any) from local storage
+	chrome.storage.sync.get(['stylesheetEnabled'], function (result) {
+	  const isStylesheetEnabled = result.stylesheetEnabled;
+	  // Update the checkbox state based on the stored value
+	  enableStylesheetCheckbox.checked = isStylesheetEnabled;
+  
+	  // Apply or remove the stylesheet based on the stored value
+	  if (isStylesheetEnabled) {
+		enableStylesheet();
+	  } else {
+		disableStylesheet();
+	  }
+	});
+  
+	// Add an event listener to the checkbox
+	enableStylesheetCheckbox.addEventListener('change', function () {
+	  if (this.checked) {
+		enableStylesheet();
+	  } else {
+		disableStylesheet();
+	  }
+	});
+  
+	// Function to enable the stylesheet
+	function enableStylesheet() {
+	  chrome.storage.sync.set({ stylesheetEnabled: true });
+	  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+		const tab = tabs[0];
+		chrome.scripting.insertCSS({
+		  target: { tabId: tab.id },
+		  files: ['style.css'], // Replace with your stylesheet file
+		});
+	  });
 	}
-});
+  
+	// Function to disable the stylesheet
+	function disableStylesheet() {
+		chrome.storage.sync.set({ stylesheetEnabled: false });
+		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+		  const tab = tabs[0];
+		  const tabId = tab.id;
+		  if (tabId !== undefined) {
+			chrome.scripting.removeCSS({
+			  target: { tabId: tabId },
+			  files: ['style.css'], // Replace with your stylesheet file
+			});
+		  }
+		});
+	}
+
+
+
+
 
 
 

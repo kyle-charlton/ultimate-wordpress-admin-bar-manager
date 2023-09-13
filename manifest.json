@@ -7,11 +7,11 @@
 	"permissions": [
 	    "contextMenus",
 	    "tabs",
+		"activeTab",
 	    "storage"
 	],
 	"content_scripts": [{
 		"matches": ["<all_urls>"],
-		"css": ["style.css"],
 		"js": ["content.js"]
 	}],
 	"icons": { "16": "icon16.png",

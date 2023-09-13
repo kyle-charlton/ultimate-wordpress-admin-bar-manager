@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script src="popup.js"></script>
 	<link rel="stylesheet" type="text/css" href="popup.css">
 	<title>Ultimate WordPress Admin Bar Manager</title>
 </head>
@@ -34,11 +33,11 @@
 
 
 
-		<details style="display: none;">
+		<details>
 			<summary>General Options</summary>
 			<div class="kc-wp-admin-bar-mgr_options">
 				<label><input type="checkbox" id="hide_front_bar" class="general-checkboxes" value="hide_front_bar"> Hide Frontend Admin Bar</label><br>
-				<label><input type="checkbox" id="hide_admin_bar" value="hide_admin_bar"> Hide Dashboard WP Admin Bar</label><br>
+				<label style="display: none;"><input type="checkbox" id="hide_admin_bar" value="hide_admin_bar"> Hide Dashboard WP Admin Bar</label><br>
 			</div>
 		</details>
 
@@ -55,6 +54,9 @@
 		</details>
 
 
-	</div>	
+	</div>
+
+	<script src="popup.js"></script>
+	
 </body>
 </html>
