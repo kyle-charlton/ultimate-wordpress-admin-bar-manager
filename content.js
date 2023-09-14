@@ -14,27 +14,23 @@ function isWordPressSite() {
 }
 
 
-// On right click and if visiting a WordPress site add context menu
-//document.addEventListener("mousedown", function(event){
-//document.addEventListener('DOMContentLoaded', () => {	
-    //if(event.button == 2) { // If right click
-		// Check if it's a WordPress site
-		isWordPressSite().then(isWordPress => {
-			if (isWordPress) {
-				console.log('This is a WordPress site.');
-				//var target = event.target;
-				//var menuParents = target.closest(".menu-item");
-				//chrome.runtime.sendMessage(menuParents ? { cmd: 'addLinkContextMenu' } : { cmd: 'addContextMenu' });
-				chrome.runtime.sendMessage({ cmd: 'addContextMenu' });
-			} else {
-				chrome.runtime.sendMessage({cmd: 'removeContextMenu'});
-				console.log('This is not a WordPress site.');
-			}
-		}).catch(error => {
-			console.error('Error checking REST API availability:', error);
-		});
-    //}
-//}, true);
+
+// Check if it's a WordPress site
+isWordPressSite().then(isWordPress => {
+	if (isWordPress) {
+		console.log('This is a WordPress site.');
+		//var target = event.target;
+		//var menuParents = target.closest(".menu-item");
+		//chrome.runtime.sendMessage(menuParents ? { cmd: 'addLinkContextMenu' } : { cmd: 'addContextMenu' });
+		chrome.runtime.sendMessage({ cmd: 'addContextMenu' });
+	} else {
+		chrome.runtime.sendMessage({cmd: 'removeContextMenu'});
+		console.log('This is not a WordPress site.');
+	}
+}).catch(error => {
+	console.error('Error checking REST API availability:', error);
+});
+
 
 
 
@@ -76,28 +72,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	        window.open(go_to_url, '_blank');
 	    }
 
-	    // if(request == "getClickedEl1") { // Go to menu page's edit screen if link in menu right clicked
-		// 	var domain = window.location.protocol + "//" + window.location.host; // get domain
-		// 	var link = document.activeElement.href; // get link href
-		// 	var full_slug = link.replace(domain, ""); // remove domain
-		// 	var full_slug_parse = full_slug.substring(0, full_slug.length-1); // remove back slash from end of url
-		// 	var slug = full_slug_parse.split("/").pop(); // get the slug
-		// 	var i;
-		// 	for (i = 0; i < cpt.length; i++) {
-		// 		if(link.includes(cpt[i]) ) {
-		// 			console.log(cpt[i]);
-		// 			pt = cpt[i];
-		// 		} else {
-		// 			pt = 'pages';
-		// 		}
-		// 	}
-		// 	jQuery.get(domain+'/wp-json/wp/v2/'+pt+'?slug='+slug, function(data) {
-		// 		console.log(data[0]['id']);
-		// 		var pageID = data[0]['id'];
-		// 		var go_to_url = domain+'/wp-admin/post.php?post='+pageID+'&action=edit';
-		// 	    window.open(go_to_url, '_blank');
-		// 	});			
-	    // }
 
 		if (request === "getClickedEl1") {
 			// Go to menu page's edit screen if link in menu is right-clicked
@@ -154,29 +128,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	    }
 
 
-	    // if(request == "getClickedEl3") { // GET PAGE ID FROM MENU LINK
-	    // 	var domain = window.location.protocol + "//" + window.location.host; // get domain
-		// 	var link = document.activeElement.href; // get link href
-		// 	var full_slug = link.replace(domain, ""); // remove domain
-		// 	var full_slug_parse = full_slug.substring(0, full_slug.length-1); // remove back slash from end of url
-		// 	var slug = full_slug_parse.split("/").pop(); // get the slug
-		// 	var i;
-		// 	for (i = 0; i < cpt.length; i++) {
-		// 		if(link.includes(cpt[i]) ) {
-		// 			console.log(cpt[i]);
-		// 			pt = cpt[i];
-		// 		} else {
-		// 			pt = 'pages';
-		// 		}
-		// 	}
-		// 	jQuery.get(domain+'/wp-json/wp/v2/'+pt+'?slug='+slug, function(data) {
-		// 		console.log(data[0]['id']);
-		// 		var pageID = data[0]['id'];
- 		// 		var dummy = $('<input class="kc-getID">').val(pageID).appendTo('body').select()
- 		// 		document.execCommand('copy')
- 		// 		$('.kc-getID').remove();
-		// 	});	
-	    // }
 
 		if (request == "getClickedEl3") {
 			var domain = window.location.protocol + "//" + window.location.host; // get domain
@@ -215,30 +166,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		
 
 
-	    // if(request == "getClickedEl4") { // Get current page ID if right click menu option selected
-		// 	var classList = document.getElementsByTagName('body')[0].classList;
-		// 	for (var i = 0; i < classList.length; i++) {
-		// 	    if (classList[i].includes("page-id") || classList[i].includes("postid")) {
-		// 	    	var domain = window.location.protocol + "//" + window.location.host + "/";
-		// 	        var pageId = classList[i].split("-").pop(); 
-		// 	        var dummy = $('<input class="kc-getID">').val(pageId).appendTo('body').select()
- 		// 			document.execCommand('copy')
- 		// 			$('.kc-getID').remove();
-		// 	    }
-		// 	}
-	    // }
-
-
-	    // if(request == "getClickedEl5") { // GET PAGE ID FROM MENU LINK
-	    // 	var domain = window.location.protocol + "//" + window.location.host; // get domain
-	    // 	var link = (document.activeElement.href) ? document.activeElement.href : window.location.href; // if menu link right clicked get link href else get page href
-		// 	var full_slug = link.replace(domain, ""); // remove domain
-		// 	console.log(full_slug);
-		// 	var dummy = $('<input class="kc-getID">').val(full_slug).appendTo('body').select() // add permalink to input and select
-		// 	document.execCommand('copy') // copy permalink
-		// 	$('.kc-getID').remove(); // remove input
-	    // }
-
 		if (request === "getClickedEl4") {
 			// Get current page ID if right-click menu option selected
 			var classList = document.getElementsByTagName('body')[0].classList;
@@ -276,3 +203,29 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 	});
 });
+
+
+
+
+
+
+// Listen for messages from popup.js to toggle styles
+// chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+// 	if (request.cmd === 'toggleStyles') {
+// 	  const enableStyles = request.enableStyles;
+// 	  const styles = `
+// 		html:lang(en-US):not(.wp-toolbar) {
+// 		  margin-top: ${enableStyles ? '0px' : 'initial'} !important;
+// 		}
+  
+// 		html:not(.wp-toolbar) #wpadminbar {
+// 		  display: ${enableStyles ? 'none' : 'initial'} !important;
+// 		}
+// 	  `;
+  
+// 	  // Inject CSS into the current page
+// 	  const styleElement = document.createElement('style');
+// 	  styleElement.textContent = styles;
+// 	  document.head.appendChild(styleElement);
+// 	}
+//   });

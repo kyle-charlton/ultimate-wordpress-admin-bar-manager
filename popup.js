@@ -9,10 +9,12 @@ var context_opt = [];
 
 // get current domain
 chrome.tabs.query(query, function (tabs) {
-    var url = tabs[0].url;
-	var patt = '^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)';
-	var domain = url.match(patt);
-	go_to_url = domain[0];
+    if (tabs.length > 0) {
+        var url = tabs[0].url;
+        var patt = '^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)';
+        var domain = url.match(patt);
+        go_to_url = domain[0];
+    }
 });
 
 
@@ -76,58 +78,171 @@ chrome.storage.sync.get('wp_cpts', function(data) {
 
 
 
-	// Get the checkbox element
-	const enableStylesheetCheckbox = document.getElementById('hide_front_bar');
-  
-	// Load the saved state (if any) from local storage
-	chrome.storage.sync.get(['stylesheetEnabled'], function (result) {
-	  const isStylesheetEnabled = result.stylesheetEnabled;
-	  // Update the checkbox state based on the stored value
-	  enableStylesheetCheckbox.checked = isStylesheetEnabled;
-  
-	  // Apply or remove the stylesheet based on the stored value
-	  if (isStylesheetEnabled) {
-		enableStylesheet();
-	  } else {
-		disableStylesheet();
-	  }
+// Function to save the checkbox state to Chrome Storage
+function saveCheckboxState() {
+	const checkbox = document.getElementById('hide_front_bar');
+	const isChecked = checkbox.checked;
+	
+	chrome.storage.sync.set({ 'hide_front_bar': isChecked }, function () {
+	  console.log('Checkbox state saved');
 	});
+  }
   
-	// Add an event listener to the checkbox
-	enableStylesheetCheckbox.addEventListener('change', function () {
-	  if (this.checked) {
-		enableStylesheet();
-	  } else {
-		disableStylesheet();
-	  }
+  // Function to load the checkbox state from Chrome Storage
+  function loadCheckboxState() {
+	const checkbox = document.getElementById('hide_front_bar');
+	
+	chrome.storage.sync.get('hide_front_bar', function (data) {
+	  const isChecked = data['hide_front_bar'];
+	  checkbox.checked = isChecked;
+	  console.log('Checkbox state loaded');
 	});
+  }
   
-	// Function to enable the stylesheet
-	function enableStylesheet() {
-	  chrome.storage.sync.set({ stylesheetEnabled: true });
-	  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-		const tab = tabs[0];
-		chrome.scripting.insertCSS({
-		  target: { tabId: tab.id },
-		  files: ['style.css'], // Replace with your stylesheet file
-		});
-	  });
-	}
+  // Event listener for when the checkbox is changed
+  const checkbox = document.getElementById('hide_front_bar');
+  checkbox.addEventListener('change', saveCheckboxState);
+  checkbox.addEventListener('change', testChanges);
   
-	// Function to disable the stylesheet
-	function disableStylesheet() {
-		chrome.storage.sync.set({ stylesheetEnabled: false });
-		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-		  const tab = tabs[0];
-		  const tabId = tab.id;
-		  if (tabId !== undefined) {
-			chrome.scripting.removeCSS({
-			  target: { tabId: tabId },
-			  files: ['style.css'], // Replace with your stylesheet file
-			});
-		  }
-		});
-	}
+  // Load the initial state of the checkbox when the popup is opened
+  loadCheckboxState();
+
+function testChanges() {
+	console.log(chrome.tabs);
+	const body = document.body;
+	body.style.backgroundColor = checkbox.checked ? 'green' : 'red';
+	changeBackgroundColor();
+}
+
+
+// Function to change the background color of the body tag on the active tab
+function changeBackgroundColor() {
+	chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+	  // Get the ID of the currently active tab
+	  const tabId = tabs[0].id;
+		console.log(tabId);
+	  // Execute a content script in the active tab to change the background color
+	//   chrome.scripting.executeScript({
+	// 	target: { tabId: tabId },
+	// 	function: function () {
+	// 	  // Change the background color of the body tag to red
+	// 	  document.body.style.backgroundColor = 'red';
+	// 	},
+	//   });
+	});
+  }
+
+
+
+
+// Function to update CSS based on checkbox state
+async function updateCSS() {
+  console.log("run");
+  let [tab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+
+  if (checkbox.checked) {
+    console.log("checked");
+    try {
+      await chrome.scripting.insertCSS({
+        target: {
+          tabId: tab.id,
+        },
+        files: ["style.css"],
+      });
+    } catch (err) {
+      console.error(`failed to insert option 1 CSS: ${err}`);
+    }
+  } else {
+    console.log("NOT CHECKED");
+    try {
+      await chrome.scripting.removeCSS({
+        target: {
+          tabId: tab.id,
+        },
+        files: ["style.css"],
+      });
+    } catch (err) {
+      console.error(`failed to remove option 1 CSS: ${err}`);
+    }
+  }
+}
+
+console.log("Pizza");
+// Add an event listener to the checkbox for click events
+checkbox.addEventListener("click", updateCSS);
+
+// Call the updateCSS function when the page loads
+window.addEventListener("load", updateCSS);
+
+
+
+  
+  
+
+
+
+
+//const enableStylesheetCheckbox = document.getElementById('hide_front_bar');
+
+  // Load the saved state (if any) from local storage
+//   chrome.storage.sync.get(['stylesheetEnabled'], function (result) {
+//     const isStylesheetEnabled = result.stylesheetEnabled;
+//     // Update the checkbox state based on the stored value
+//     enableStylesheetCheckbox.checked = isStylesheetEnabled;
+//     // Toggle styles based on the initial state
+//     //toggleStyles(isStylesheetEnabled);
+//   });
+
+  // Function to toggle CSS styles
+//   function toggleStyles(enableStyles) {
+//     const styles = `
+//       html:lang(en-US):not(.wp-toolbar) {
+//         margin-top: ${enableStyles ? '0px' : 'initial'} !important;
+//       }
+
+//       html:not(.wp-toolbar) #wpadminbar {
+//         display: ${enableStyles ? 'none' : 'initial'} !important;
+//       }
+//     `;
+
+    // Get the currently active tab
+//     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+//       const tab = tabs[0];
+
+//       // Check if the tab object is defined
+//       if (tab) {
+//         // Inject CSS into the active tab using executeScript
+//         chrome.tabs.executeScript(tab.id, {
+//           code: `
+//             var style = document.createElement('style');
+//             style.textContent = ${JSON.stringify(styles)};
+//             document.head.appendChild(style);
+//           `,
+//         });
+//       } else {
+//         console.error("Tab is undefined or lacks an ID.");
+//       }
+//     });
+//   }
+
+  // Add an event listener to the checkbox to toggle the styles
+//   enableStylesheetCheckbox.addEventListener('change', function () {
+//     const enableStylesheet = enableStylesheetCheckbox.checked;
+//     // Update the checkbox state in storage
+//     chrome.storage.sync.set({ stylesheetEnabled: enableStylesheet });
+//     // Toggle the styles
+//     //toggleStyles(enableStylesheet);
+//   });
+
+
+
+
+
+
+
 
 
 
@@ -248,4 +363,3 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
 
 });
-
