@@ -61,19 +61,11 @@ chrome.storage.sync.get('wp_cpts', function(data) {
 });
 
 
-// Set general options checkbox list
-// chrome.storage.sync.get('wp_gen_opts', function(data) {
-//     if(data.wp_gen_opts) {
-//     	general_opt = data.wp_gen_opts;
-//     } else {
-//     	general_opt = [];
-//     }
 
-// 	var i;
-// 	for (i = 0; i < general_opt.length; i++) {
-// 		document.getElementById(general_opt[i]).checked = true;
-// 	}
-// });
+
+
+
+
 
 
 
@@ -108,30 +100,10 @@ function saveCheckboxState() {
   loadCheckboxState();
 
 function testChanges() {
-	console.log(chrome.tabs);
+	//console.log(chrome.tabs);
 	const body = document.body;
 	body.style.backgroundColor = checkbox.checked ? 'green' : 'red';
-	changeBackgroundColor();
 }
-
-
-// Function to change the background color of the body tag on the active tab
-function changeBackgroundColor() {
-	chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-	  // Get the ID of the currently active tab
-	  const tabId = tabs[0].id;
-		console.log(tabId);
-	  // Execute a content script in the active tab to change the background color
-	//   chrome.scripting.executeScript({
-	// 	target: { tabId: tabId },
-	// 	function: function () {
-	// 	  // Change the background color of the body tag to red
-	// 	  document.body.style.backgroundColor = 'red';
-	// 	},
-	//   });
-	});
-  }
-
 
 
 
@@ -170,7 +142,7 @@ async function updateCSS() {
   }
 }
 
-console.log("Pizza");
+
 // Add an event listener to the checkbox for click events
 checkbox.addEventListener("click", updateCSS);
 
@@ -180,62 +152,6 @@ window.addEventListener("load", updateCSS);
 
 
   
-  
-
-
-
-
-//const enableStylesheetCheckbox = document.getElementById('hide_front_bar');
-
-  // Load the saved state (if any) from local storage
-//   chrome.storage.sync.get(['stylesheetEnabled'], function (result) {
-//     const isStylesheetEnabled = result.stylesheetEnabled;
-//     // Update the checkbox state based on the stored value
-//     enableStylesheetCheckbox.checked = isStylesheetEnabled;
-//     // Toggle styles based on the initial state
-//     //toggleStyles(isStylesheetEnabled);
-//   });
-
-  // Function to toggle CSS styles
-//   function toggleStyles(enableStyles) {
-//     const styles = `
-//       html:lang(en-US):not(.wp-toolbar) {
-//         margin-top: ${enableStyles ? '0px' : 'initial'} !important;
-//       }
-
-//       html:not(.wp-toolbar) #wpadminbar {
-//         display: ${enableStyles ? 'none' : 'initial'} !important;
-//       }
-//     `;
-
-    // Get the currently active tab
-//     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-//       const tab = tabs[0];
-
-//       // Check if the tab object is defined
-//       if (tab) {
-//         // Inject CSS into the active tab using executeScript
-//         chrome.tabs.executeScript(tab.id, {
-//           code: `
-//             var style = document.createElement('style');
-//             style.textContent = ${JSON.stringify(styles)};
-//             document.head.appendChild(style);
-//           `,
-//         });
-//       } else {
-//         console.error("Tab is undefined or lacks an ID.");
-//       }
-//     });
-//   }
-
-  // Add an event listener to the checkbox to toggle the styles
-//   enableStylesheetCheckbox.addEventListener('change', function () {
-//     const enableStylesheet = enableStylesheetCheckbox.checked;
-//     // Update the checkbox state in storage
-//     chrome.storage.sync.set({ stylesheetEnabled: enableStylesheet });
-//     // Toggle the styles
-//     //toggleStyles(enableStylesheet);
-//   });
 
 
 
