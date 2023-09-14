@@ -70,6 +70,11 @@ chrome.storage.sync.get('wp_cpts', function(data) {
 
 
 
+
+
+
+
+
 // Function to save the checkbox state to Chrome Storage
 function saveCheckboxState() {
 	const checkbox = document.getElementById('hide_front_bar');
@@ -152,6 +157,9 @@ window.addEventListener("load", updateCSS);
 
 
   
+  
+
+
 
 
 
