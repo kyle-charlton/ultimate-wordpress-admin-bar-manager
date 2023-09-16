@@ -96,18 +96,18 @@ function saveCheckboxState() {
 	});
   }
   
-  // Event listener for when the checkbox is changed
-  const checkbox = document.getElementById('hide_front_bar');
-  checkbox.addEventListener('change', saveCheckboxState);
-  checkbox.addEventListener('change', testChanges);
-  
-  // Load the initial state of the checkbox when the popup is opened
-  loadCheckboxState();
 
 function testChanges() {
 	//console.log(chrome.tabs);
 	const body = document.body;
 	body.style.backgroundColor = checkbox.checked ? 'green' : 'red';
+	
+	// Send a message to content.js
+    const isChecked = checkbox.checked;
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        const activeTab = tabs[0];
+        chrome.tabs.sendMessage(activeTab.id, { toggleContent: isChecked });
+    });
 }
 
 
@@ -148,11 +148,14 @@ async function updateCSS() {
 }
 
 
-// Add an event listener to the checkbox for click events
+// Event listener for when the checkbox is changed
+const checkbox = document.getElementById('hide_front_bar');
+checkbox.addEventListener('change', saveCheckboxState);
+checkbox.addEventListener('change', testChanges); // Add an event listener to the checkbox for click events
 checkbox.addEventListener("click", updateCSS);
+window.addEventListener("load", updateCSS); // Call the updateCSS function when the page loads
 
-// Call the updateCSS function when the page loads
-window.addEventListener("load", updateCSS);
+loadCheckboxState(); // Load the initial state of the checkbox when the popup is opened
 
 
 

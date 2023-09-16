@@ -13,10 +13,10 @@ async function isWordPressSite() {
 isWordPressSite()
     .then(isWordPress => {
         if (isWordPress) {
-            console.log('This is a WordPress site.');
+            //console.log('This is a WordPress site.');
             chrome.runtime.sendMessage({ cmd: 'addContextMenu' });
         } else {
-            console.log('This is not a WordPress site.');
+            //console.log('This is not a WordPress site.');
         }
     })
     .catch(error => {
@@ -25,7 +25,7 @@ isWordPressSite()
 
 // Function to open the edit screen for a WordPress page or post
 function openEditScreen(pageId, pt = 'pages') {
-	console.log("Open edit page");
+	//console.log("Open edit page");
     const domain = window.location.protocol + '//' + window.location.host;
     const go_to_url = `${domain}/wp-admin/post.php?post=${pageId}&action=edit`;
     window.open(go_to_url, '_blank');
@@ -64,7 +64,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 .then(response => response.json())
                 .then(data => {
                     if (data.length > 0) {
-                        console.log(data[0].id);
+                        //console.log(data[0].id);
                         const pageID = data[0].id;
                         openEditScreen(pageID, pt);
                     }
@@ -76,9 +76,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
         if (request === "getClickedEl2" || request === "getClickedEl4") {
             // Get the current page ID if the right-click menu option is selected
-            console.log("getClickedEl2");
+            //console.log("getClickedEl2");
 			const classList = document.body.classList;
-			console.log(classList);
+			//console.log(classList);
             for (const className of classList) {
                 if (className.includes("page-id") || className.includes("postid")) {
                     const domain = window.location.protocol + '//' + window.location.host + '/';
@@ -105,16 +105,23 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     });
 });
 
+
+
+
+
+
 // Function to update CSS based on checkbox state
-async function updateCSS(isChecked) {
+function updateCSS(isChecked) {
     if (isChecked) {
         const link = document.createElement("link");
         link.href = chrome.runtime.getURL("style.css");
         link.type = "text/css";
         link.rel = "stylesheet";
-        console.log(link);
+        link.id = "hideAdminBar"; 
         document.head.appendChild(link);
-        console.log("hide admin bar");
+        //console.log("hide admin bar");
+    } else {
+        console.log('remove styles');
     }
 }
 
@@ -128,3 +135,25 @@ function loadCheckboxState() {
 
 // Load the initial state of the checkbox when the content script is executed
 loadCheckboxState();
+
+
+
+
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    if (message.toggleContent !== undefined) {
+        // Handle the message here, for example:
+        if (message.toggleContent) {
+            // Checkbox is checked, perform some action in content.js
+            console.log('checked');
+        } else {
+            // Checkbox is unchecked, undo the action if needed.
+            console.log('unchecked');
+            const stylesheet = document.getElementById("hideAdminBar");
+            if (stylesheet) {
+                stylesheet.parentNode.removeChild(stylesheet);
+            }
+        }
+    }
+
+    // Rest of your content.js code...
+});
