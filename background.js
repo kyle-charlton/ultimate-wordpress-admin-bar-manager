@@ -1,8 +1,10 @@
+console.log("Kyle's Service worker");
+
 // Context menu item definitions
 const contextMenuItems = [
 	{
 		id: 'dashboard_link',
-	  	title: '🛠 WordPress Dashboard',
+	  	title: '🛠 Open Dashboard',
 	  	contexts: ['all'],
 	},
 	{
@@ -12,19 +14,29 @@ const contextMenuItems = [
 	},
 	{
 	  	id: 'kc_edit_page_trigger',
-	  	title: '✏ Edit WordPress Page',
-	  	contexts: ['all'],
+	  	title: '✏ Open Editor',
+	  	contexts: ['page'],
 	},
 	{
 	  	id: 'kc_get_page_ID_trigger',
-	  	title: '🆔 Copy Page/Post ID',
-	  	contexts: ['all'],
+	  	title: '🆔 Copy ID',
+	  	contexts: ['page'],
 	},
 	{
 	  	id: 'kc_copy_permalink',
 	  	title: '✂ Copy Permalink',
 	  	contexts: ['all'],
 	},
+	{
+		id: 'kc_open_link_editor',
+		title: '✏ Edit Linked WordPress Page',
+		contexts: ['link'],
+  },
+  {
+		id: 'kc_get_linked_page_ID_trigger',
+		title: '🆔 Copy Linked Page/Post ID',
+		contexts: ['link'],
+},
 	// Add more menu items here as needed
 ];
   
@@ -64,7 +76,7 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
 	  	// Handle more menu items here as needed
 	}
 });
-  
+
 // Message listener for managing context menus
 chrome.runtime.onMessage.addListener(function (request) {
 	if (request.cmd == 'addContextMenu') {

@@ -1,3 +1,4 @@
+
 // Function to check if the website is a WordPress site by checking if the WordPress REST API is available
 async function isWordPressSite() {
     const apiUrl = '/wp-json/';
@@ -10,18 +11,12 @@ async function isWordPressSite() {
 }
 
 // Check if it's a WordPress site
-isWordPressSite()
-    .then(isWordPress => {
-        if (isWordPress) {
-            //console.log('This is a WordPress site.');
-            chrome.runtime.sendMessage({ cmd: 'addContextMenu' });
-        } else {
-            //console.log('This is not a WordPress site.');
-        }
-    })
-    .catch(error => {
-        console.error('Error checking REST API availability:', error);
-    });
+isWordPressSite().then(isWordPress => {
+    chrome.runtime.sendMessage({ cmd: isWordPress ? 'addContextMenu' : 'removeContextMenu' });
+}).catch(error => {
+    console.error('Error checking REST API availability:', error);
+});
+
 
 // Function to open the edit screen for a WordPress page or post
 function openEditScreen(pageId, pt = 'pages') {
@@ -36,11 +31,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     chrome.storage.sync.get('wp_cpts', function (data) {
         const cpt = data.wp_cpts || [];
 
+        // Go to the WordPress admin dashboard
         if (request === "getClickedEl0") {
-            // Go to the WordPress admin dashboard
-            const domain = window.location.protocol + '//' + window.location.host + '/';
-            const go_to_url = `${domain}wp-admin`;
-            window.open(go_to_url, '_blank');
+            const dashboard = window.location.protocol + '//' + window.location.host + '/wp-admin';
+            window.open(dashboard, '_blank');
         }
 
         if (request === "getClickedEl1" || request === "getClickedEl3") {
@@ -74,8 +68,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 });
         }
 
-        if (request === "getClickedEl2" || request === "getClickedEl4") {
-            // Get the current page ID if the right-click menu option is selected
+        if (request === "getClickedEl2") {
+            // Go to the current page's editor
             //console.log("getClickedEl2");
 			const classList = document.body.classList;
 			//console.log(classList);
@@ -84,6 +78,23 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                     const domain = window.location.protocol + '//' + window.location.host + '/';
                     const pageId = className.split("-").pop();
                     openEditScreen(pageId);
+                }
+            }
+        }
+
+        if (request === "getClickedEl4") {
+            // Get the current page ID if the right-click menu option is selected
+			const classList = document.body.classList;
+            for (const className of classList) {
+                if (className.includes("page-id") || className.includes("postid")) {
+                    const pageId = className.split("-").pop();
+                    const dummy = document.createElement('input');
+                    dummy.className = "kc-getID";
+                    dummy.value = pageId;
+                    document.body.appendChild(dummy);
+                    dummy.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(dummy);
                 }
             }
         }
@@ -104,8 +115,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         }
     });
 });
-
-
 
 
 
