@@ -1,9 +1,9 @@
-console.log("Kyle's Service worker");
+console.log("Ultimate WordPress Admin Bar Manager Service worker");
 
 // Context menu item definitions
 const contextMenuItems = [
 	{
-		id: 'dashboard_link',
+		id: 'kc_dashboard_link',
 	  	title: '🛠 Open Dashboard',
 	  	contexts: ['all'],
 	},
@@ -13,12 +13,12 @@ const contextMenuItems = [
 	  	contexts: ['all'],
 	},
 	{
-	  	id: 'kc_edit_page_trigger',
+	  	id: 'kc_edit_page',
 	  	title: '✏ Open Editor',
 	  	contexts: ['page'],
 	},
 	{
-	  	id: 'kc_get_page_ID_trigger',
+	  	id: 'kc_get_page_ID',
 	  	title: '🆔 Copy ID',
 	  	contexts: ['page'],
 	},
@@ -33,7 +33,7 @@ const contextMenuItems = [
 		contexts: ['link'],
   },
   {
-		id: 'kc_get_linked_page_ID_trigger',
+		id: 'kc_get_linked_page_ID',
 		title: '🆔 Copy Linked Page/Post ID',
 		contexts: ['link'],
 },
@@ -55,23 +55,23 @@ function removeAllContextMenus() {
 // Handle menu item clicks using chrome.contextMenus.onClicked event
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
 	switch (info.menuItemId) {
-		case 'dashboard_link':
-			kc_dashboard_trigger(info, tab);
+		case 'kc_dashboard_link':
+			chrome.tabs.sendMessage(tab.id, 'openDashboard');
 			break;
-	  	case 'kc_edit_page_trigger':
-			kc_edit_page_trigger(info, tab);
+	  	case 'kc_edit_page':
+			chrome.tabs.sendMessage(tab.id, 'openEditor');
 			break;
-	  	case 'kc_get_page_ID_trigger':
-			kc_get_page_ID_trigger(info, tab);
+	  	case 'kc_get_page_ID':
+			chrome.tabs.sendMessage(tab.id, 'getID');
 			break;
 	  	case 'kc_copy_permalink':
-			kc_copy_permalink(info, tab);
+			chrome.tabs.sendMessage(tab.id, 'getPermalink');
 			break;
-	  	case 'kc_edit_linked_page_trigger':
-			kc_edit_linked_page_trigger(info, tab);
+	  	case 'kc_open_link_editor':
+			chrome.tabs.sendMessage(tab.id, 'openReferencedEditor');
 			break;
-	  	case 'edit_linked_page':
-			kc_get_linked_page_ID_trigger(info, tab);
+	  	case 'kc_get_linked_page_ID':
+			chrome.tabs.sendMessage(tab.id, 'getReferencedID');
 			break;
 	  	// Handle more menu items here as needed
 	}
@@ -98,31 +98,6 @@ chrome.runtime.onMessage.addListener(function (request) {
 	  	});
 	});
 });
-
-// Define your click event handlers here
-function kc_dashboard_trigger(info, tab) {
-	chrome.tabs.sendMessage(tab.id, 'getClickedEl0');
-}
-
-function kc_edit_page_trigger(info, tab) {
-	chrome.tabs.sendMessage(tab.id, 'getClickedEl2');
-}
-
-function kc_get_page_ID_trigger(info, tab) {
-	chrome.tabs.sendMessage(tab.id, 'getClickedEl4');
-}
-
-function kc_copy_permalink(info, tab) {
-	chrome.tabs.sendMessage(tab.id, 'getClickedEl5');
-}
-
-function kc_edit_linked_page_trigger(info, tab) {
-	chrome.tabs.sendMessage(tab.id, 'getClickedEl1');
-}
-
-function kc_get_linked_page_ID_trigger(info, tab) {
-	chrome.tabs.sendMessage(tab.id, 'getClickedEl3');
-}
 
 
 

@@ -32,12 +32,56 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         const cpt = data.wp_cpts || [];
 
         // Go to the WordPress admin dashboard
-        if (request === "getClickedEl0") {
+        if (request === "openDashboard") {
             const dashboard = window.location.protocol + '//' + window.location.host + '/wp-admin';
             window.open(dashboard, '_blank');
         }
 
-        if (request === "getClickedEl1" || request === "getClickedEl3") {
+        // Go to the current page's editor
+        if (request === "openEditor") {
+			const classList = document.body.classList;
+            for (const className of classList) {
+                if (className.includes("page-id") || className.includes("postid")) {
+                    const pageId = className.split("-").pop();
+                    openEditScreen(pageId);
+                }
+            }
+        }
+
+        // Get page ID from page
+        if (request === "getID") {
+			const classList = document.body.classList;
+            for (const className of classList) {
+                if (className.includes("page-id") || className.includes("postid")) {
+                    const pageId = className.split("-").pop();
+                    const dummy = document.createElement('input');
+                    dummy.className = "kc-getID";
+                    dummy.value = pageId;
+                    document.body.appendChild(dummy);
+                    dummy.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(dummy);
+                }
+            }
+        }
+
+        // Get permalink from page
+        if (request === "getPermalink") {
+            const domain = window.location.protocol + '//' + window.location.host;
+            const link = document.activeElement.href || window.location.href;
+            const fullSlug = link.replace(domain, '');
+            const fullSlugParse = fullSlug.replace(/\/$/, ''); // Remove trailing slash
+            const dummy = document.createElement('input');
+            dummy.className = "kc-getID";
+            dummy.value = fullSlugParse;
+            document.body.appendChild(dummy);
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+        }
+
+        // Get page ID from menu link
+        if (request === "openReferencedEditor" || request === "getReferencedID") {
             // Handle menu link or generic link click
             const domain = window.location.protocol + '//' + window.location.host;
             const link = document.activeElement.href || window.location.href;
@@ -68,51 +112,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
                 });
         }
 
-        if (request === "getClickedEl2") {
-            // Go to the current page's editor
-            //console.log("getClickedEl2");
-			const classList = document.body.classList;
-			//console.log(classList);
-            for (const className of classList) {
-                if (className.includes("page-id") || className.includes("postid")) {
-                    const domain = window.location.protocol + '//' + window.location.host + '/';
-                    const pageId = className.split("-").pop();
-                    openEditScreen(pageId);
-                }
-            }
-        }
-
-        if (request === "getClickedEl4") {
-            // Get the current page ID if the right-click menu option is selected
-			const classList = document.body.classList;
-            for (const className of classList) {
-                if (className.includes("page-id") || className.includes("postid")) {
-                    const pageId = className.split("-").pop();
-                    const dummy = document.createElement('input');
-                    dummy.className = "kc-getID";
-                    dummy.value = pageId;
-                    document.body.appendChild(dummy);
-                    dummy.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(dummy);
-                }
-            }
-        }
-
-        if (request === "getClickedEl5") {
-            // GET PAGE ID FROM MENU LINK
-            const domain = window.location.protocol + '//' + window.location.host;
-            const link = document.activeElement.href || window.location.href;
-            const fullSlug = link.replace(domain, '');
-            const fullSlugParse = fullSlug.replace(/\/$/, ''); // Remove trailing slash
-            const dummy = document.createElement('input');
-            dummy.className = "kc-getID";
-            dummy.value = fullSlugParse;
-            document.body.appendChild(dummy);
-            dummy.select();
-            document.execCommand('copy');
-            document.body.removeChild(dummy);
-        }
+        
     });
 });
 
