@@ -1,6 +1,13 @@
+body {
+    margin: 0;
+}
+#load_btns {
+    padding: 1em;
+    background: aliceblue;
+    border-bottom: 1px solid #ccc;
+}
 #wrapper.kc-wp-admin-bar-mgr {
     min-width: 20em;
-	padding: 0.2em 1em;
 }
 
 .kc-wp-admin-bar-mgr button {

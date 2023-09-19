@@ -1,4 +1,6 @@
 
+const domain = window.location.protocol + '//' + window.location.host;
+
 // Function to check if the website is a WordPress site by checking if the WordPress REST API is available
 async function isWordPressSite() {
     const apiUrl = '/wp-json/';
@@ -20,10 +22,20 @@ isWordPressSite().then(isWordPress => {
 
 // Function to open the edit screen for a WordPress page or post
 function openEditScreen(pageId, pt = 'pages') {
-	//console.log("Open edit page");
-    const domain = window.location.protocol + '//' + window.location.host;
     const go_to_url = `${domain}/wp-admin/post.php?post=${pageId}&action=edit`;
     window.open(go_to_url, '_blank');
+}
+
+
+function copyToClipBoard(content) {
+    console.log(content);
+    const dummy = document.createElement('input');
+    dummy.className = "kc-getID";
+    dummy.value = content;
+    document.body.appendChild(dummy);
+    dummy.select();
+    document.execCommand('copy');
+    document.body.removeChild(dummy);
 }
 
 // Handle different messages from the extension
@@ -54,64 +66,52 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             for (const className of classList) {
                 if (className.includes("page-id") || className.includes("postid")) {
                     const pageId = className.split("-").pop();
-                    const dummy = document.createElement('input');
-                    dummy.className = "kc-getID";
-                    dummy.value = pageId;
-                    document.body.appendChild(dummy);
-                    dummy.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(dummy);
+                    copyToClipBoard(pageId);
                 }
             }
         }
 
         // Get permalink from page
-        if (request === "getPermalink") {
-            const domain = window.location.protocol + '//' + window.location.host;
+        if (request === "getPermalink") {  
             const link = document.activeElement.href || window.location.href;
             const fullSlug = link.replace(domain, '');
-            const fullSlugParse = fullSlug.replace(/\/$/, ''); // Remove trailing slash
-            const dummy = document.createElement('input');
-            dummy.className = "kc-getID";
-            dummy.value = fullSlugParse;
-            document.body.appendChild(dummy);
-            dummy.select();
-            document.execCommand('copy');
-            document.body.removeChild(dummy);
+            const fullSlugParse = fullSlug != '/' ? fullSlug.replace(/\/$/, '') : fullSlug; // Remove trailing slash if not home page
+            copyToClipBoard(fullSlugParse);
         }
 
-        // Get page ID from menu link
-        if (request === "openReferencedEditor" || request === "getReferencedID") {
-            // Handle menu link or generic link click
-            const domain = window.location.protocol + '//' + window.location.host;
-            const link = document.activeElement.href || window.location.href;
-            const fullSlug = link.replace(domain, '');
+        // Open referenced page's editor or copy referenced page's ID
+        if(request.cmd === 'openReferencedEditor' || request.cmd === "getReferencedID") {
+            const fullSlug = request.info.linkUrl.replace(domain, '');
             const fullSlugParse = fullSlug.replace(/\/$/, ''); // Remove trailing slash
             const slug = fullSlugParse.split('/').pop();
+            
             let pt = 'pages'; // Default value for pt
 
             for (const customPt of cpt) {
-                if (link.includes(customPt)) {
-                    console.log(customPt);
+                if (fullSlug.includes(customPt)) {
                     pt = customPt;
                     break;
                 }
             }
 
-            fetch(`${domain}/wp-json/wp/v2/${pt}?slug=${slug}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length > 0) {
-                        //console.log(data[0].id);
-                        const pageID = data[0].id;
-                        openEditScreen(pageID, pt);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
+            fetch(`${domain}/wp-json/wp/v2/${pt}?slug=${slug}`).then(response => response.json()).then(data => {
+                if (data.length > 0) {
+                    const pageID = data[0].id;
+                    request.cmd === 'openReferencedEditor' ? openEditScreen(pageID, pt) : copyToClipBoard(pageID);
+                } else {
+                    pt = 'posts';
+                    fetch(`${domain}/wp-json/wp/v2/${pt}?slug=${slug}`).then(response => response.json()).then(data => {
+                        if (data.length > 0) {
+                            const pageID = data[0].id;
+                            request.cmd === 'openReferencedEditor' ? openEditScreen(pageID, pt) : copyToClipBoard(pageID);
+                        }
+                    })
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
 
+        }
         
     });
 });
@@ -130,11 +130,11 @@ function updateCSS(isChecked) {
         document.head.appendChild(link);
         //console.log("hide admin bar");
     } else {
-        console.log('remove styles');
+        //console.log('remove styles');
     }
 }
 
-// Function to load the checkbox state from Chrome Storage
+// Function to get the checkbox state from Chrome Storage
 function loadCheckboxState() {
     chrome.storage.sync.get('hide_front_bar', function (data) {
         const isChecked = data['hide_front_bar'];
@@ -145,15 +145,11 @@ function loadCheckboxState() {
 // Load the initial state of the checkbox when the content script is executed
 loadCheckboxState();
 
-
-
-
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.toggleContent !== undefined) {
-        // Handle the message here, for example:
         if (message.toggleContent) {
             // Checkbox is checked, perform some action in content.js
-            console.log('checked');
+            //console.log('checked');
         } else {
             // Checkbox is unchecked, undo the action if needed.
             console.log('unchecked');
@@ -163,6 +159,4 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             }
         }
     }
-
-    // Rest of your content.js code...
 });

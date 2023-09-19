@@ -1,5 +1,3 @@
-console.log("Ultimate WordPress Admin Bar Manager Service worker");
-
 // Context menu item definitions
 const contextMenuItems = [
 	{
@@ -68,10 +66,10 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
 			chrome.tabs.sendMessage(tab.id, 'getPermalink');
 			break;
 	  	case 'kc_open_link_editor':
-			chrome.tabs.sendMessage(tab.id, 'openReferencedEditor');
+			chrome.tabs.sendMessage(tab.id, {'cmd':'openReferencedEditor', 'info':info});
 			break;
 	  	case 'kc_get_linked_page_ID':
-			chrome.tabs.sendMessage(tab.id, 'getReferencedID');
+			chrome.tabs.sendMessage(tab.id, {'cmd':'getReferencedID', 'info':info});
 			break;
 	  	// Handle more menu items here as needed
 	}

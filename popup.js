@@ -81,7 +81,7 @@ function saveCheckboxState() {
 	const isChecked = checkbox.checked;
 	
 	chrome.storage.sync.set({ 'hide_front_bar': isChecked }, function () {
-	  console.log('Checkbox state saved');
+	  	//console.log('Checkbox state saved');
 	});
   }
   
@@ -90,17 +90,17 @@ function saveCheckboxState() {
 	const checkbox = document.getElementById('hide_front_bar');
 	
 	chrome.storage.sync.get('hide_front_bar', function (data) {
-	  const isChecked = data['hide_front_bar'];
-	  checkbox.checked = isChecked;
-	  console.log('Checkbox state loaded');
+		const isChecked = data['hide_front_bar'];
+	  	checkbox.checked = isChecked;
+	  	//console.log('Checkbox state loaded');
 	});
   }
   
 
 function testChanges() {
 	//console.log(chrome.tabs);
-	const body = document.body;
-	body.style.backgroundColor = checkbox.checked ? 'green' : 'red';
+	//const body = document.body;
+	//body.style.backgroundColor = checkbox.checked ? 'green' : 'red';
 	
 	// Send a message to content.js
     const isChecked = checkbox.checked;
@@ -114,37 +114,36 @@ function testChanges() {
 
 // Function to update CSS based on checkbox state
 async function updateCSS() {
-  console.log("run");
-  let [tab] = await chrome.tabs.query({
-    active: true,
-    currentWindow: true,
-  });
+  	let [tab] = await chrome.tabs.query({
+    	active: true,
+    	currentWindow: true,
+  	});
 
-  if (checkbox.checked) {
-    console.log("checked");
-    try {
-      await chrome.scripting.insertCSS({
-        target: {
-          tabId: tab.id,
-        },
-        files: ["style.css"],
-      });
-    } catch (err) {
-      console.error(`failed to insert option 1 CSS: ${err}`);
-    }
-  } else {
-    console.log("NOT CHECKED");
-    try {
-      await chrome.scripting.removeCSS({
-        target: {
-          tabId: tab.id,
-        },
-        files: ["style.css"],
-      });
-    } catch (err) {
-      console.error(`failed to remove option 1 CSS: ${err}`);
-    }
-  }
+  	if (checkbox.checked) {
+    	//console.log("checked");
+    	try {
+      		await chrome.scripting.insertCSS({
+        		target: {
+          			tabId: tab.id,
+        		},
+        		files: ["style.css"],
+      		});
+    	} catch (err) {
+    		console.error(`failed to insert option 1 CSS: ${err}`);
+    	}
+  	} else {
+    	//console.log("NOT CHECKED");
+    	try {
+      		await chrome.scripting.removeCSS({
+        		target: {
+          			tabId: tab.id,
+        		},
+        		files: ["style.css"],
+      		});
+    	} catch (err) {
+      		console.error(`failed to remove option 1 CSS: ${err}`);
+    	}
+  	}
 }
 
 
